@@ -38,6 +38,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>sandbox_fsHospedaje</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
