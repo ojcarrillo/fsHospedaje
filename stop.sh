@@ -1,1 +1,1 @@
-docker stop dk_fstransporte && docker rm dk_fstransporte
+docker stop dk_fshospedaje && docker rm dk_fshospedaje
