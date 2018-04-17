@@ -10,7 +10,7 @@ echo "======================================================="
 echo "======================================================="
 echo "corre imagen del contenedor"
 docker run --name dk_fshospedaje \
--d -p 2021:21 -p 2020:20 -p 12020:12020 -p 12021:12021 -p 12022:12022 -p 12023:12023 -p 12024:12024 -p 12025:12025  \
+-d -p 3021:21 -p 3020:20 -p 13020:12020 -p 13021:12021 -p 13022:12022 -p 13023:12023 -p 13024:12024 -p 13025:12025  \
 -e "USER=touresbalon" -e "PASS=verysecretpwd" \
 -v /data/ftp/fshospedaje:/ftp \
 -it dk_fshospedaje
