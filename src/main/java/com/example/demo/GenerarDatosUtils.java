@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -18,8 +19,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenerarDatosUtils {
 
-	private final static List<String> ciudades = Arrays.asList(
-			"Puerto Inírida,San José del Guaviare,Neiva,Riohacha,Santa Marta,Villavicencio,Pasto,Cúcuta,Mocoa,Armenia,Pereira,San Andres,Bucaramanga,Sincelejo,Ibagué,Cali,Mitú,Puerto Carreño,Leticia,Medellín,Arauca,Barranquilla,Cartagena,Tunja,Manizales,Florencia,Yopal,Popayán,Valledupar,Quibdó,Montería,Bogotá"
+	private final static List<String> ciudades = Arrays
+			.asList("Puerto Inírida,San José del Guaviare,Neiva,Riohacha,Santa Marta,Villavicencio,Pasto,Cúcuta,Mocoa,Armenia,Pereira,San Andres,Bucaramanga,Sincelejo,Ibagué,Cali,Mitú,Puerto Carreño,Leticia,Medellín,Arauca,Barranquilla,Cartagena,Tunja,Manizales,Florencia,Yopal,Popayán,Valledupar,Quibdó,Montería,Bogotá"
+					.split(","));
+	private final static List<String> hoteles = Arrays
+			.asList("Hotel Candilejas,Hotel Los Girasoles,Hotel Boyaca La 24,Hotel Lagos del Norte,Hotel Inn 72,Hotel Bogota Norte,Hotel Lord,Suites Ejecutivas Economicas,Suites Inn Turisticas Calle 63,Suites Inn Economicas Calle 63,Hotel 63 Inn Ejecutivo,Hotel Elegant Suite Normandia,Hotel del Puente Bogota,Hotel San Jose De Bavaria,Casa Kiwi Resort,Hospedaje Las Palmeras de La 97,Hotel Bogota Royal,Hotel La Mansion,Radisson Royal Bogota Hotel"
 					.split(","));
 	private final static String FORMATO_FECHA_HORA = "ddMMyyyyHH00";
 	private final static String FORMATO_FECHA_ENTRADA = "ddMMyyyy";
@@ -39,9 +43,14 @@ public class GenerarDatosUtils {
 	public String getCiudad() {
 		return StringUtils.rightPad(ciudades.get(new Random().nextInt(ciudades.size()) + 1), 21, " ");
 	}
+	
+	public String getHotel() {
+		return StringUtils.rightPad(hoteles.get(new Random().nextInt(hoteles.size()) + 1), 31, " ");
+	}
 
 	public String getHabitacionDisponible() {
-		return  (new Random().nextInt(TOTAL_PISOS) + 1) + String.format("%02d", new Random().nextInt(TOTAL_HABITACIONES) + 1);
+		return (new Random().nextInt(TOTAL_PISOS) + 1)
+				+ String.format("%02d", new Random().nextInt(TOTAL_HABITACIONES) + 1);
 	}
 
 	public Integer getHabitacionesComprados() {
@@ -59,7 +68,7 @@ public class GenerarDatosUtils {
 	public String getIdHabitacion() {
 		return generateRandomStr(LETRAS, 3) + String.format("%06d", new Random().nextInt(100000) + 1);
 	}
-	
+
 	public String getIdCancelacion() {
 		return String.format("%07d", new Random().nextInt(1000000) + 1);
 	}
@@ -70,7 +79,7 @@ public class GenerarDatosUtils {
 		br.close();
 		return datos;
 	}
-	
+
 	public List<String> getFiltrosVarios(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String opc = null;
@@ -114,12 +123,28 @@ public class GenerarDatosUtils {
 				+ StringUtils.leftPad(String.valueOf(valorPuestos), 17, "0")
 				+ StringUtils.leftPad(String.valueOf(valorIVA), 17, "0");
 	}
-	
+
 	public String getValoresMonetarios(Integer cantPuestos) {
 		Double valorPuestos = getValorPto(cantPuestos);
 		Double valorIVA = getValorIVA(valorPuestos);
 		return StringUtils.leftPad(String.valueOf(cantPuestos), 2, "0")
 				+ StringUtils.leftPad(String.valueOf(valorPuestos), 17, "0")
 				+ StringUtils.leftPad(String.valueOf(valorIVA), 17, "0");
+	}
+
+	public Date getFutureDay(Date date, Integer days) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.DATE, days); // number of days to add
+		return c.getTime();
+	}
+
+	public Date parseDate(String fecha, String formato) throws ParseException {
+		SimpleDateFormat formatoDate = new SimpleDateFormat(formato);
+		return formatoDate.parse(fecha);
+	}
+	
+	public String getIdReserva() {
+		return generateRandomStr(LETRAS, 1) + String.format("%08d", new Random().nextInt(100000) + 1);
 	}
 }

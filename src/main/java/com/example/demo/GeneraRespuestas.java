@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -75,7 +76,7 @@ public class GeneraRespuestas {
 				return getDatosRtaReservar(fileInput);
 			} else if (fileInput.getName().startsWith("comprar_")) {
 				return getDatosRtaComprar(fileInput);
-			} else if (fileInput.getName().startsWith("anular_")) {
+			} else if (fileInput.getName().startsWith("cancelar_")) {
 				return getDatosRtaAnular(fileInput);
 			} 	
 		}catch(Exception ex) {
@@ -88,17 +89,26 @@ public class GeneraRespuestas {
 		List<String> rtas = new ArrayList<String>();
 		String opc = gendata.getFiltros(file);
 		if(opc!=null) {
-			String fechaInicial = opc.substring(0, 8);
-			String fechaFinal = opc.substring(8, 16).trim();
-			String ciudadOrigen = opc.substring(16, 37).trim();			
-			for(int i=1;i<new Random().nextInt(10)+1;i++) {
-				StringBuilder salida = new StringBuilder();
-				salida.append(gendata.getIdHabitacion());
-				salida.append(gendata.getFechaDisponible(gendata.getFechaEntrada(fechaInicial), gendata.getFechaEntrada(fechaFinal)));
-				salida.append(ciudadOrigen.length()>0 ? ciudadOrigen : gendata.getCiudad());
-				salida.append(gendata.getHabitacionDisponible());
-				rtas.add(salida.toString());
-			}
+			StringBuilder salida = new StringBuilder();
+			String idreserva = opc.substring(0, 9).trim();
+			salida.append(gendata.getIdHabitacion());
+			Date fecSalida = gendata.getFutureDay(new Date(), 5);
+			salida.append(gendata.getFechaDisponible(fecSalida, gendata.getFutureDay(fecSalida, 5)));
+			salida.append(gendata.getCiudad());
+			salida.append(gendata.getHotel());
+			salida.append(gendata.getHabitacionDisponible());
+//			String fechaInicial = opc.substring(0, 8);
+//			String fechaFinal = opc.substring(8, 16).trim();
+//			String ciudadOrigen = opc.substring(16, 37).trim();			
+//			for(int i=1;i<new Random().nextInt(10)+1;i++) {
+//				StringBuilder salida = new StringBuilder();
+//				salida.append(gendata.getIdHabitacion());
+//				salida.append(gendata.getFechaDisponible(gendata.getFechaEntrada(fechaInicial), gendata.getFechaEntrada(fechaFinal)));
+//				salida.append(ciudadOrigen.length()>0 ? ciudadOrigen : gendata.getCiudad());
+//				salida.append(gendata.getHabitacionDisponible());
+//				rtas.add(salida.toString());
+//			}
+			rtas.add(salida.toString());
 		}
 		return rtas;
 	}
@@ -127,15 +137,18 @@ public class GeneraRespuestas {
 		List<String> rtas = new ArrayList<String>();
 		for(String opc : gendata.getFiltrosVarios(file)) {
 			String fechaInicio = opc.substring(0, 12).trim();
-			String fechaFinal = opc.substring(13, 24).trim();
-			String ciudadOrigen = opc.substring(25, 46).trim();
-			String habitacion = opc.substring(47, 49).trim();			
+			String fechaFinal = opc.substring(12, 24).trim();
+			String ciudadOrigen = opc.substring(24, 45).trim();
+			String hotel = opc.substring(45, 76).trim();
+			String habitacion = opc.substring(76, opc.length()).trim();			
 			StringBuilder salida = new StringBuilder();
+			salida.append(gendata.getIdReserva());
 			salida.append(gendata.getIdHabitacion());
-			salida.append(ciudadOrigen);
 			salida.append(fechaInicio);
 			salida.append(fechaFinal);
-			salida.append(habitacion);
+			salida.append(ciudadOrigen);
+			salida.append(hotel);
+			salida.append(gendata.getHabitacionDisponible());
 			rtas.add(salida.toString());
 		}
 		return rtas;
@@ -164,10 +177,11 @@ public class GeneraRespuestas {
 	public List<String> getDatosRtaAnular(File file) throws IOException {
 		List<String> rtas = new ArrayList<String>();
 		for(String opc : gendata.getFiltrosVarios(file)) {
-			String idViaje = opc.substring(0, 9).trim();
+			String idReserva = opc.substring(0, 9).trim();
 			StringBuilder salida = new StringBuilder();
-			salida.append(idViaje);
-			salida.append(gendata.getIdCancelacion());			
+			salida.append(idReserva);
+			salida.append(gendata.getIdCancelacion());	
+			salida.append("ANULACION RESERVA APROBADA");
 			rtas.add(salida.toString());
 		}
 		return rtas;
