@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,8 +147,8 @@ public class GeneraRespuestas {
 			salida.append(gendata.getIdHabitacion());
 			salida.append(fechaInicio);
 			salida.append(fechaFinal);
-			salida.append(ciudadOrigen);
-			salida.append(hotel);
+			salida.append(StringUtils.rightPad(ciudadOrigen, 21, " "));
+			salida.append(StringUtils.rightPad(hotel, 31, " "));
 			salida.append(gendata.getHabitacionDisponible());
 			rtas.add(salida.toString());
 		}
